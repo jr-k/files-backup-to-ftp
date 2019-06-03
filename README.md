@@ -6,7 +6,8 @@ Usage: `fbtf [-options]`<br />
 where options include:
 -	`-r | --rotate`		rotate counter (e.g: -r=10, default: 10)
 -	`-c | --crondir`		cron directory, useful to store dump in different cron (e.g: -c=hourly, default: default)
--	`-o | --output`		output directory, location where dumps will be stored (e.g: -o=/home/dumps)
+-	`-i | --input`		input directory, location where dumps are initially stored (e.g: -i=/home/mybucket)
+-	`-o | --output`		output directory, location where dumps will be stored (e.g: -o=/home/filesbackups)
 -	`-u | --ftpuser`		ftp username
 -	`-p | --ftppwd`		ftp password
 -	`-s | --ftphost`		ftp host
