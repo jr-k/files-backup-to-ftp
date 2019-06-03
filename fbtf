@@ -51,7 +51,7 @@ case $i in
     FTP_HOST="${i#*=}"
     shift # past argument=value
     ;;
-    -p=*|--ftpport=*)
+    -t=*|--ftpport=*)
     FTP_PORT="${i#*=}"
     shift # past argument=value
     ;;
@@ -59,15 +59,15 @@ case $i in
     echo "Usage: dumprotate2 [-options]"
     echo "where options include:"
     echo "	-f | --classifier	project name for exemple (will be a root directory for all your dumps)"
-    echo "	-r 	| --rotate		rotate counter (e.g: -r='10', default: $ROTATE)"
+    echo "	-r | --rotate		rotate counter (e.g: -r='10', default: $ROTATE)"
     echo "	-c | --crondir		cron directory, useful when you want to store dump in many ways  (e.g: -c='hourly', default: $ROOM)"
-    echo "	-i 	| --input		input directory, location where dumps are initially stored (e.g: -i='/home/mybucket')"
-    echo "	-e	| --exclude	exclude directories from input directory separated by ; (e.g: -e='/home/mybucket/.git;/home/mybucket/cache')"
+    echo "	-i | --input		input directory, location where dumps are initially stored (e.g: -i='/home/mybucket')"
+    echo "	-e | --exclude	exclude directories from input directory separated by ; (e.g: -e='/home/mybucket/.git;/home/mybucket/cache')"
     echo "	-o | --output		output directory, location where dumps will be stored (e.g: -o='/home/filesbackups')"
-    echo "  -u | --ftpuser		ftp username"
+    echo "  	-u | --ftpuser		ftp username"
     echo "	-w | --ftppwd		ftp password"
-    echo "	-s 	 | --ftphost	ftp host"
-    echo "	-p | --ftpport		ftp port"
+    echo "	-s | --ftphost	ftp host"
+    echo "	-t | --ftpport		ftp port"
     echo "	-h | --help		shows this help"
     exit 0
     ;;
