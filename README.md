@@ -13,7 +13,7 @@ where options include:
 -	`-u | --ftpuser`		ftp username
 -	`-w | --ftppwd`		ftp password
 -	`-s | --ftphost`		ftp host
--	`-p | --ftpport`		ftp port
+-	`-t | --ftpport`		ftp port
 -	`-h | --help`		shows this help
 
 Crontab entries
