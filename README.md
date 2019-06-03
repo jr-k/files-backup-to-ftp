@@ -8,6 +8,7 @@ where options include:
 -	`-r | --rotate`		rotate counter (e.g: -r=10, default: 10)
 -	`-c | --crondir`		cron directory, useful to store dump in different cron (e.g: -c=hourly, default: default)
 -	`-i | --input`		input directory, location where dumps are initially stored (e.g: -i=/home/mybucket)
+-	`-e | --exclude`		exclude directories from input directory separated by ; (e.g: -e='/home/mybucket/.git;/home/mybucket/cache')
 -	`-o | --output`		output directory, location where dumps will be stored (e.g: -o=/home/filesbackups)
 -	`-u | --ftpuser`		ftp username
 -	`-w | --ftppwd`		ftp password
