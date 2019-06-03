@@ -4,6 +4,7 @@ Simple file backup dump rotate system
 # help
 Usage: `fbtf [-options]`<br />
 where options include:
+-	`-f | --classifier`		project name for exemple (will be a root directory for all your dumps)
 -	`-r | --rotate`		rotate counter (e.g: -r=10, default: 10)
 -	`-c | --crondir`		cron directory, useful to store dump in different cron (e.g: -c=hourly, default: default)
 -	`-i | --input`		input directory, location where dumps are initially stored (e.g: -i=/home/mybucket)
