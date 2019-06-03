@@ -1,0 +1,115 @@
+#!/bin/bash
+
+DATE=$(date +"%Y%m%d_%H%M%S")
+ROTATE=10
+CLASSIFIER="default"
+ROOM="default"
+INPUTDIR=""
+OUTPUTDIR=/home/filesbackups
+FTP_HOST=""
+FTP_PORT="21"
+FTP_USER=""
+FTP_PWD=""
+
+for i in "$@"
+do
+case $i in
+    -f=*|--rotate=*)
+    CLASSIFIER="${i#*=}"
+    shift # past argument=value
+    ;;
+    -r=*|--rotate=*)
+    ROTATE="${i#*=}"
+    shift # past argument=value
+    ;;
+    -c=*|--crondir=*)
+    ROOM="${i#*=}"
+    shift # past argument=value
+    ;;
+    -i=*|--input=*)
+    INPUTDIR="${i#*=}"
+    shift # past argument=value
+    ;;
+    -o=*|--output=*)
+    OUTPUTDIR="${i#*=}"
+    shift # past argument=value
+    ;;
+    -u=*|--ftpuser=*)
+    FTP_USER="${i#*=}"
+    shift # past argument=value
+    ;;
+    -w=*|--ftppwd=*)
+    FTP_PWD="${i#*=}"
+    shift # past argument=value
+    ;;
+    -s=*|--ftphost=*)
+    FTP_HOST="${i#*=}"
+    shift # past argument=value
+    ;;
+    -p=*|--ftpport=*)
+    FTP_PORT="${i#*=}"
+    shift # past argument=value
+    ;;
+    -h|--help)
+    echo "Usage: dumprotate2 [-options]"
+    echo "where options include:"
+    echo "	-f | --classifier	project name for exemple (will be a root directory for all your dumps)"
+    echo "	-r 	| --rotate		rotate counter (e.g: -r=10, default: $ROTATE)"
+    echo "	-c | --crondir		cron directory, useful when you want to store dump in many ways  (e.g: -c=hourly, default: $ROOM)"
+    echo "	-i 	| --input		input directory, location where dumps are initially stored (e.g: -i=/home/mybucket)"
+    echo "	-o | --output		output directory, location where dumps will be stored (e.g: -o=/home/filesbackups)"
+    echo "  -u | --ftpuser		ftp username"
+    echo "	-w | --ftppwd		ftp password"
+    echo "	-s 	 | --ftphost	ftp host"
+    echo "	-p | --ftpport		ftp port"
+    echo "	-h | --help		shows this help"
+    exit 0
+    ;;
+    *)
+          # unknown option
+    ;;
+esac
+done
+
+if [[ ! $ROTATE =~ ^[0-9]+$ ]]; then
+      echo "Error: -r=*|--rotate=* parameter must be a number" && exit 1
+fi
+
+if [[ ! $ROOM =~ ^[a-zA-Z0-9_]+$ ]]; then
+      echo "Error: -c=*|--crondir=* parameter must be a lowercase word" && exit 1
+fi
+
+echo "======= START"
+echo "Source Directory: $INPUTDIR"
+echo "Working Directory: $OUTPUTDIR"
+echo "Rotate Counter: $ROTATE"
+echo "Classifier Name: $CLASSIFIER"
+echo "Room Name: $ROOM"
+echo "FTP Host: $FTP_HOST"
+echo "FTP Port: $FTP_PORT"
+echo "FTP User: $FTP_USER"
+echo "======="
+
+echo "Dump dur: $INPUTDIR"
+
+mkdir -p $OUTPUTDIR/$CLASSIFIER/$ROOM
+
+gzip $INPUTDIR > $OUTPUTDIR/$CLASSIFIER/$ROOM/filesbackups_$CLASSIFIER_$DATE.gzip
+
+counter=$(find $OUTPUTDIR/$CLASSIFIER/$ROOM/ -maxdepth 1 -type f | wc -l)
+echo "Dump counter: $counter"
+
+dumps=$(ls -1 $OUTPUTDIR/$CLASSIFIER/$ROOM/ | sort -r)
+cpt=0
+for dump in $dumps
+do
+	((cpt+=1))
+	if [ $cpt -gt $ROTATE ]
+	then
+		echo "REMOTE FILE $cpt/$ROTATE"
+		rm $OUTPUTDIR/$CLASSIFIER/$ROOM/$dump
+	fi
+done
+
+
+echo "======= END"
