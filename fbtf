@@ -90,14 +90,48 @@ echo "FTP Port: $FTP_PORT"
 echo "FTP User: $FTP_USER"
 echo "======="
 
-echo "Dump dur: $INPUTDIR"
+echo "Dump dir: $INPUTDIR"
+ 
+createDir() {
+    ftp -n $FTP_HOST $FTP_PORT <<END_SCRIPT
+quote USER $FTP_USER
+quote PASS $FTP_PWD
+mkdir $CLASSIFIER
+mkdir $CLASSIFIER/$ROOM
+quit
+END_SCRIPT
+}
+
+uploadBackup() {
+    ftp -n $FTP_HOST $FTP_PORT <<END_SCRIPT
+quote USER $FTP_USER
+quote PASS $FTP_PWD
+binary
+put $1 $2
+quit
+END_SCRIPT
+}
+
+deleteFile() {
+    ftp -n $FTP_HOST $FTP_PORT <<END_SCRIPT
+quote USER $FTP_USER
+quote PASS $FTP_PWD
+delete $1
+quit
+END_SCRIPT
+}
 
 mkdir -p $OUTPUTDIR/$CLASSIFIER/$ROOM
+createDir
 
-gzip $INPUTDIR > $OUTPUTDIR/$CLASSIFIER/$ROOM/filesbackups_$CLASSIFIER_$DATE.gzip
+RELATIVE_OUTPUTFILE="$CLASSIFIER/$ROOM/filesbackups_$CLASSIFIER_$DATE.tar"
+OUTPUTFILE="$OUTPUTDIR/$RELATIVE_OUTPUTFILE"
+
+tar -Pzcf $OUTPUTFILE $INPUTDIR
+uploadBackup $OUTPUTFILE $RELATIVE_OUTPUTFILE
 
 counter=$(find $OUTPUTDIR/$CLASSIFIER/$ROOM/ -maxdepth 1 -type f | wc -l)
-echo "Dump counter: $counter"
+#echo "Dump counter: $counter"
 
 dumps=$(ls -1 $OUTPUTDIR/$CLASSIFIER/$ROOM/ | sort -r)
 cpt=0
@@ -106,8 +140,9 @@ do
 	((cpt+=1))
 	if [ $cpt -gt $ROTATE ]
 	then
-		echo "REMOTE FILE $cpt/$ROTATE"
+		#echo "REMOVE FILE $cpt/$ROTATE"
 		rm $OUTPUTDIR/$CLASSIFIER/$ROOM/$dump
+		deleteFile $CLASSIFIER/$ROOM/$dump
 	fi
 done
 
