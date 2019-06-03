@@ -9,7 +9,7 @@ where options include:
 -	`-i | --input`		input directory, location where dumps are initially stored (e.g: -i=/home/mybucket)
 -	`-o | --output`		output directory, location where dumps will be stored (e.g: -o=/home/filesbackups)
 -	`-u | --ftpuser`		ftp username
--	`-p | --ftppwd`		ftp password
+-	`-w | --ftppwd`		ftp password
 -	`-s | --ftphost`		ftp host
 -	`-p | --ftpport`		ftp port
 -	`-h | --help`		shows this help
