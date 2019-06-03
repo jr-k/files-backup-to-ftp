@@ -5,6 +5,7 @@ ROTATE=10
 CLASSIFIER="default"
 ROOM="default"
 INPUTDIR=""
+EXCLUDE=""
 OUTPUTDIR=/home/filesbackups
 FTP_HOST=""
 FTP_PORT="21"
@@ -28,6 +29,10 @@ case $i in
     ;;
     -i=*|--input=*)
     INPUTDIR="${i#*=}"
+    shift # past argument=value
+    ;;
+    -e=*|--exclude=*)
+    EXCLUDE="${i#*=}"
     shift # past argument=value
     ;;
     -o=*|--output=*)
@@ -54,10 +59,11 @@ case $i in
     echo "Usage: dumprotate2 [-options]"
     echo "where options include:"
     echo "	-f | --classifier	project name for exemple (will be a root directory for all your dumps)"
-    echo "	-r 	| --rotate		rotate counter (e.g: -r=10, default: $ROTATE)"
-    echo "	-c | --crondir		cron directory, useful when you want to store dump in many ways  (e.g: -c=hourly, default: $ROOM)"
-    echo "	-i 	| --input		input directory, location where dumps are initially stored (e.g: -i=/home/mybucket)"
-    echo "	-o | --output		output directory, location where dumps will be stored (e.g: -o=/home/filesbackups)"
+    echo "	-r 	| --rotate		rotate counter (e.g: -r='10', default: $ROTATE)"
+    echo "	-c | --crondir		cron directory, useful when you want to store dump in many ways  (e.g: -c='hourly', default: $ROOM)"
+    echo "	-i 	| --input		input directory, location where dumps are initially stored (e.g: -i='/home/mybucket')"
+    echo "	-e	| --exclude	exclude directories from input directory separated by ; (e.g: -e='/home/mybucket/.git;/home/mybucket/cache')"
+    echo "	-o | --output		output directory, location where dumps will be stored (e.g: -o='/home/filesbackups')"
     echo "  -u | --ftpuser		ftp username"
     echo "	-w | --ftppwd		ftp password"
     echo "	-s 	 | --ftphost	ftp host"
@@ -69,6 +75,11 @@ case $i in
           # unknown option
     ;;
 esac
+done
+
+for EXCLUDE_ITEM in $(echo $EXCLUDE | tr ";" "\n")
+do
+    EXCLUDE_CMD="$EXCLUDE_CMD --exclude='$EXCLUDE_ITEM' "
 done
 
 if [[ ! $ROTATE =~ ^[0-9]+$ ]]; then
@@ -127,7 +138,7 @@ createDir
 RELATIVE_OUTPUTFILE="$CLASSIFIER/$ROOM/filesbackups_$CLASSIFIER_$DATE.tar"
 OUTPUTFILE="$OUTPUTDIR/$RELATIVE_OUTPUTFILE"
 
-tar -Pzcf $OUTPUTFILE $INPUTDIR
+_tar=$(tar $EXCLUDE_CMD -Pzcf $OUTPUTFILE $INPUTDIR)
 uploadBackup $OUTPUTFILE $RELATIVE_OUTPUTFILE
 
 counter=$(find $OUTPUTDIR/$CLASSIFIER/$ROOM/ -maxdepth 1 -type f | wc -l)
