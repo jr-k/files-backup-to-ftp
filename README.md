@@ -16,9 +16,9 @@ where options include:
 -	`-h | --help`		shows this help
 
 Crontab entries
-- `* * * * * /usr/local/sbin/fbtf -r=60 -c="minutely1"`
-- `*/5 * * * * /usr/local/sbin/fbtf -r=12 -c="minutely5"`
-- `0 * * * * /usr/local/sbin/fbtf -r=24 -c="hourly"`
-- `0 1 * * * /usr/local/sbin/fbtf -r=30 -c="daily"`
-- `0 0 * * 0 /usr/local/sbin/fbtf -r=52 -c="weekly"`
-- `0 0 1 * * /usr/local/sbin/fbtf -r=12 -c="monthly"`
+- `* * * * * /usr/local/sbin/fbtf -r=60 -c="minutely1" -i="/home/mybucket" -o="/home/filesbackups"`
+- `*/5 * * * * /usr/local/sbin/fbtf -r=12 -c="minutely5" -i="/home/mybucket" -o="/home/filesbackups"`
+- `0 * * * * /usr/local/sbin/fbtf -r=24 -c="hourly" -i="/home/mybucket" -o="/home/filesbackups"`
+- `0 1 * * * /usr/local/sbin/fbtf -r=30 -c="daily" -i="/home/mybucket" -o="/home/filesbackups"`
+- `0 0 * * 0 /usr/local/sbin/fbtf -r=52 -c="weekly" -i="/home/mybucket" -o="/home/filesbackups"`
+- `0 0 1 * * /usr/local/sbin/fbtf -r=12 -c="monthly" -i="/home/mybucket" -o="/home/filesbackups"`
