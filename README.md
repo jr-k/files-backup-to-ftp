@@ -1,5 +1,5 @@
 # fbtf
-Simple file backup dump rotate system
+Simple file backup dump rotate system (optionnally send to ftp server)
 
 # help
 Usage: `fbtf [-options]`<br />
