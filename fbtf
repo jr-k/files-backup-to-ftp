@@ -15,7 +15,7 @@ FTP_PWD=""
 for i in "$@"
 do
 case $i in
-    -f=*|--rotate=*)
+    -f=*|--classifier=*)
     CLASSIFIER="${i#*=}"
     shift # past argument=value
     ;;
